@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:background="@color/col_tool"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".AddAct"
+        android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:actionBarSize"
+            android:background="@color/text_on_white"
+            android:elevation="4dp"
+    />
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:background="@color/white"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:gravity="center_vertical"
+            android:elevation="2dp">
+        <EditText
+                android:id="@+id/nameS"
+                android:hint="@string/name_add"
+                android:textColorHint="@color/text_on_white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:background="@color/white"
+                android:textColor="@color/text_on_white"/>
+        <EditText
+                android:id="@+id/numS"
+                android:inputType="number"
+                android:hint="@string/_0"
+                android:textColorHint="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:maxLines="1"
+                android:background="@color/white"
+                android:layout_marginEnd="2dp"
+                android:textColor="@color/text_on_white"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rub"
+                android:textColor="@color/text_on_white"
+                android:layout_marginEnd="40dp"/>
+        <Button
+                android:enabled="false"
+                android:id="@+id/plus"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:background="@drawable/plus"/>
+
+    </LinearLayout>
+
+</LinearLayout>
