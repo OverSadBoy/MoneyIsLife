@@ -54,6 +54,12 @@ public class BalanceFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        loadDate();
+    }
+
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isResumed()) {
