@@ -24,7 +24,7 @@ public class BalanceFragment extends Fragment {
     private TextView balance;
     private TextView income;
     private TextView expenses;
-    // private DiagramView diagram;
+    private DiagramView diagram;
     private int incomeSum;
     private int expensesSum;
     private App app;
@@ -49,7 +49,7 @@ public class BalanceFragment extends Fragment {
         balance = view.findViewById(R.id.balance);
         income = view.findViewById(R.id.income);
         expenses = view.findViewById(R.id.expenses);
-        //diagram = view.findViewById(R.id.diagram);
+        diagram = view.findViewById(R.id.diagram);
         loadDate();
     }
 
@@ -62,17 +62,22 @@ public class BalanceFragment extends Fragment {
     }
 
     private void setIncome(List<Item> incomes) {
-        incomeSum = 0;
-        for (int i = 0; i < incomes.size(); i++) {
-            incomeSum += Integer.parseInt(incomes.get(i).getPrice());
-        }
+        new Thread(() -> {
+            incomeSum = 0;
+            for (int i = 0; i < incomes.size(); i++) {
+                incomeSum += Integer.parseInt(incomes.get(i).getPrice());
+            }
+        }).start();
     }
 
-    private void setExpenses(List<Item> incomes) {
-        expensesSum = 0;
-        for (int i = 0; i < incomes.size(); i++) {
-            expensesSum += Integer.parseInt(incomes.get(i).getPrice());
-        }
+    private void setExpenses(List<Item> expenses) {
+        new Thread(() -> {
+            expensesSum = 0;
+            for (int i = 0; i < expenses.size(); i++) {
+                expensesSum += Integer.parseInt(expenses.get(i).getPrice());
+            }
+        }).start();
+
     }
 
     private void loadDate() {
@@ -107,7 +112,7 @@ public class BalanceFragment extends Fragment {
             }
         });
         balance.setText(getString(R.string.rub, incomeSum - expensesSum));
-//        diagram.update(incomeSum, expensesSum);
+        diagram.update(incomeSum, expensesSum);
 
     }
 

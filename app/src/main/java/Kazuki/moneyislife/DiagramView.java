@@ -16,10 +16,19 @@ public class DiagramView extends View {
     private Paint incomePaint = new Paint();
     private Paint expensePaint = new Paint();
 
+    public DiagramView(Context context) {
+        this(context, null);
+    }
+
+    public DiagramView(Context context, @Nullable AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
     public DiagramView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         incomePaint.setColor(getResources().getColor(R.color.sec_yellow));
         expensePaint.setColor(getResources().getColor(R.color.red));
+
     }
 
     public void update(int income, int expense) {
