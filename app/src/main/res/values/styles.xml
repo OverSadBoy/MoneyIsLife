@@ -1,13 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar" >
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/col_tool</item>
-        <item name="colorPrimaryDark">@color/col_tool</item>
-        <item name="colorAccent">@color/col_sec</item>
+        <item name="colorPrimary">@color/dark_back</item>
+        <item name="colorPrimaryDark">@color/dark_back</item>
+        <item name="colorAccent">@color/sec_yellow</item>
 
-        <item name="actionModeBackground">@color/text_on_white</item>
+        <item name="actionModeBackground">@color/light_back</item>
         <item name="windowActionModeOverlay">true</item>
     </style>
 

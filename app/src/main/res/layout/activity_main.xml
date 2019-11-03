@@ -16,13 +16,13 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:actionBarSize"
-                android:background="@color/text_on_white"/>
+                android:background="@color/light_back"/>
 
         <android.support.design.widget.TabLayout
                 android:id="@+id/tabLayout"
                 app:tabTextColor="@color/white"
-                app:tabIndicatorColor="@color/col_sec"
-                android:background="@color/text_on_white"
+                app:tabIndicatorColor="@color/sec_yellow"
+                android:background="@color/light_back"
                 android:layout_width="match_parent"
                 android:layout_height="?android:actionBarSize">
         </android.support.design.widget.TabLayout>
@@ -33,7 +33,7 @@
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/col_tool"/>
+            android:background="@color/dark_back"/>
 
     <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"

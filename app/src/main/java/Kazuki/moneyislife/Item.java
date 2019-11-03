@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Item implements Parcelable {
+
     public static final String TYPE_UNKNOWN = "unknown";
     public static final String TYPE_INCOMES = "incomes";
     public static final String TYPE_EXPENSES = "expenses";
@@ -25,6 +26,7 @@ public class Item implements Parcelable {
         price = in.readString();
         type = in.readString();
     }
+
     @Override
     public int describeContents() {
         return 0;
@@ -49,6 +51,4 @@ public class Item implements Parcelable {
             return new Item[size];
         }
     };
-
-
 }

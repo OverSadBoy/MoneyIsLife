@@ -1,10 +1,12 @@
 package Kazuki.moneyislife;
 
-
+import Kazuki.moneyislife.api.AddItemResult;
+import Kazuki.moneyislife.api.Api;
+import Kazuki.moneyislife.api.App;
+import Kazuki.moneyislife.api.RemoveItemResult;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,28 +14,35 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 import java.util.List;
 
-public class ItemsFragment extends Fragment implements ItemsAdapterListener {
-
+public class ItemsFragment extends Fragment {
 
     private static final String TYPE_KEY = "type";
-    public static final int ADD_ITEM_CODE = 123;
+    public static final int ADD_ITEM_REQUEST_CODE = 123;
+
     private String type;
-    private RecyclerView recyclerView;
+    private RecyclerView recycler;
+    private SwipeRefreshLayout refresh;
     private ItemsAdapter adapter;
     private Api api;
-    private SwipeRefreshLayout refresh;
+    private App app;
+    private ActionMode actionMode = null;
 
     public static ItemsFragment createItemsFragment(String type) {
         ItemsFragment fragment = new ItemsFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ItemsFragment.TYPE_KEY, type);
+        bundle.putBoolean("key", true);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -42,45 +51,35 @@ public class ItemsFragment extends Fragment implements ItemsAdapterListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new ItemsAdapter();
-        adapter.setListener(this);
-
+        adapter.setListener(new AdapterListener());
         Bundle bundle = getArguments();
         type = bundle.getString(TYPE_KEY, Item.TYPE_EXPENSES);
-
         if (type.equals(Item.TYPE_UNKNOWN)) {
             throw new IllegalArgumentException("Unknown type");
         }
-        api = ((App) getActivity().getApplication()).getApi();
+        app = (App) getActivity().getApplication();
+        api = app.getApi();
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_items, container, false);
         return view;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView = view.findViewById(R.id.list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
-
+        recycler = view.findViewById(R.id.list);
+        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        recycler.setAdapter(adapter);
 
         refresh = view.findViewById(R.id.refresh);
-        refresh.setColorSchemeColors(getResources().getColor(R.color.col_sec));
-        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                loadItems();
-            }
-
-        });
-
+        refresh.setColorSchemeColors(getResources().getColor(R.color.sec_yellow));
+        refresh.setOnRefreshListener(this::loadItems);
         loadItems();
     }
-
 
     private void loadItems() {
         Call<List<Item>> call = api.getItems(type);
@@ -90,7 +89,6 @@ public class ItemsFragment extends Fragment implements ItemsAdapterListener {
                 adapter.setData(response.body());
                 refresh.setRefreshing(false);
             }
-
             @Override
             public void onFailure(Call<List<Item>> call, Throwable t) {
                 refresh.setRefreshing(false);
@@ -98,48 +96,82 @@ public class ItemsFragment extends Fragment implements ItemsAdapterListener {
         });
     }
 
+    private void addItem(final Item item) {
+        Call<AddItemResult> call = api.addItem(item.price, item.name, item.type);
+        call.enqueue(new Callback<AddItemResult>() {
+            @Override
+            public void onResponse(Call<AddItemResult> call, Response<AddItemResult> response) {
+                AddItemResult result = response.body();
+                if (result.status.equals("success")) {
+                    item.id = result.id;
+                    adapter.addItem(item);
+                }
+            }
+            @Override
+            public void onFailure(Call<AddItemResult> call, Throwable t) {
+            }
+        });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ADD_ITEM_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == ADD_ITEM_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Item item = data.getParcelableExtra("item");
-            if (item.type.equals(type))
-                adapter.addItem(item);
+            if (item.type.equals(type)) {
+                addItem(item);
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private ActionMode actionMode = null;
+    private void removeSelectedItems() {
+        for (int i = adapter.getSelectedItems().size() - 1; i >= 0; i--) {
+            Item item = adapter.remove(adapter.getSelectedItems().get(i));
+            Call<RemoveItemResult> call = api.removeItem(item.id);
+            call.enqueue(new Callback<RemoveItemResult>() {
+                @Override
+                public void onResponse(Call<RemoveItemResult> call, Response<RemoveItemResult> response) {
+                }
+                @Override
+                public void onFailure(Call<RemoveItemResult> call, Throwable t) {
+                }
+            });
+        }
+        actionMode.finish();
+    }
 
-    @Override
-    public void onItemClick(Item item, int position) {
-        if (isInActionMode()) {
+    private class AdapterListener implements ItemsAdapterListener {
+
+        @Override
+        public void onItemClick(Item item, int position) {
+            if (isInActionMode()) {
+                toggleSelection(position);
+            }
+        }
+
+        @Override
+        public void onItemLongClick(Item item, int position) {
+            if (isInActionMode()) {
+                return;
+            }
+            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(actionModeCallback);
             toggleSelection(position);
         }
-    }
 
-    @Override
-    public void onItemLongClick(Item item, int position) {
-        if (isInActionMode()) {
-            return;
+        private boolean isInActionMode() {
+            return actionMode != null;
         }
-        actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(callback);
-        toggleSelection(position);
+
+        private void toggleSelection(int position) {
+            adapter.toggleSelection(position);
+        }
     }
 
-    private boolean isInActionMode() {
-        return actionMode != null;
-    }
-
-    private void toggleSelection(int position) {
-        // adapter.toggleSelection(position);
-    }
-
-    private ActionMode.Callback callback = new ActionMode.Callback() {
+    private ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             MenuInflater inflater = new MenuInflater(getContext());
             inflater.inflate(R.menu.items_menu, menu);
-
             return true;
         }
 
@@ -150,18 +182,35 @@ public class ItemsFragment extends Fragment implements ItemsAdapterListener {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-
             switch (item.getItemId()) {
                 case R.id.remove:
+                    showDialog();
                     break;
             }
-
             return false;
         }
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+            adapter.clearSelections();
             actionMode = null;
         }
     };
+
+    private void showDialog() {
+        DialogFragmentConfirm dialog = new DialogFragmentConfirm();
+        dialog.show(getFragmentManager(), "ConfirmationDialog");
+        dialog.setDialogListener(new DialogListener() {
+            @Override
+            public void positiveClick() {
+                removeSelectedItems();
+            }
+            @Override
+            public void negativeClick() {
+                actionMode.finish();
+            }
+        });
+    }
 }
+
+

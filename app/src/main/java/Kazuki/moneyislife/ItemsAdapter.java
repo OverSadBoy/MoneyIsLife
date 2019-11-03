@@ -1,7 +1,7 @@
 package Kazuki.moneyislife;
 
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,21 +25,21 @@ class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ItemViewHolder> {
     }
 
     public void addItem(Item item) {
-        data.add(item);
-        notifyItemInserted(data.size());
+        data.add(0, item);
+        notifyItemInserted(0);
     }
 
-    @NonNull
     @Override
-    public ItemsAdapter.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
+    public ItemsAdapter.ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view = inflater.inflate(R.layout.item, parent, false);
         return new ItemViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemsAdapter.ItemViewHolder viewHolder, int position) {
+    public void onBindViewHolder(ItemsAdapter.ItemViewHolder holder, int position) {
         Item record = data.get(position);
-        viewHolder.applyData(record, position, listener);
+        holder.bind(record, position, listener, selections.get(position, false));
     }
 
     @Override
@@ -47,33 +47,62 @@ class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ItemViewHolder> {
         return data.size();
     }
 
+    private SparseBooleanArray selections = new SparseBooleanArray();
+
+    public void toggleSelection(int position) {
+        if (selections.get(position, false)) {
+            selections.delete(position);
+        } else {
+            selections.put(position, true);
+        }
+        notifyItemChanged(position);
+    }
+
+    void clearSelections() {
+        selections.clear();
+        notifyDataSetChanged();
+    }
+
+    List<Integer> getSelectedItems() {
+        List<Integer> items = new ArrayList<>(selections.size());
+        for (int i = 0; i < selections.size(); i++) {
+            items.add(selections.keyAt(i));
+        }
+        return items;
+    }
+
+    Item remove(int pos) {
+        final Item item = data.remove(pos);
+        notifyItemRemoved(pos);
+        return item;
+    }
 
     static class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView price;
         private final TextView title;
+        private final TextView price;
 
-        public ItemViewHolder(@NonNull View itemView) {
+        public ItemViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             price = itemView.findViewById(R.id.price);
         }
 
-        public void applyData(final Item item, final int position, final ItemsAdapterListener listener) {
+        public void bind(final Item item, final int position, final ItemsAdapterListener listener, boolean selected) {
             title.setText(item.name);
             price.setText(item.price);
-
-            itemView.setOnClickListener((View v) -> {
+            itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onItemClick(item, position);
                 }
             });
-            itemView.setOnLongClickListener((View v) -> {
+            itemView.setOnLongClickListener(v -> {
                 if (listener != null) {
                     listener.onItemLongClick(item, position);
                 }
                 return true;
             });
+            itemView.setActivated(selected);
         }
     }
 }

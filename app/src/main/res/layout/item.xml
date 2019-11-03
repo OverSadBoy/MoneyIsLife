@@ -9,7 +9,7 @@
         android:layout_marginTop="10dp">
     <TextView
             android:id="@+id/title"
-            android:background="@color/name_it_col"
+            android:background="@drawable/item_title"
             android:textColor="@color/white"
             android:padding="16dp"
             android:layout_weight="1"
@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"/>
     <TextView
             android:id="@+id/price"
-            android:background="@color/col_sec"
+            android:background="@drawable/item_price"
             android:textColor="@color/white"
             android:padding="16dp"
             android:gravity="center"

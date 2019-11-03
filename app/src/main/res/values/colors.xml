@@ -8,10 +8,12 @@
     <color name="grey">#616161</color>
     <color name="white">#FFFFFF</color>
     <color name="red">#B00020</color>
+    <color name="light_red">#FF2020</color>
 
-    <color name="col_tool">#263238</color>
-    <color name="text_on_white">#344955</color>
-    <color name="back">#CFD8DC</color>
-    <color name="col_sec">#F9AA33</color>
-    <color name="name_it_col">#4A6572</color>
+    <color name="dark_back">#263238</color>
+    <color name="light_back">#344955</color>
+    <color name="light_gray">#CFD8DC</color>
+    <color name="sec_yellow">#F9AA33</color>
+    <color name="pre_light_gray">#4A6572</color>
+
 </resources>

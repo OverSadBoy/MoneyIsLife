@@ -1,17 +1,20 @@
 <resources>
     <string name="app_name">MoneyIsLife</string>
-    <string name="add_title">Добавить</string>
+    <string name="add">Добавить</string>
     <string name="main_title">Учет бюджета</string>
-    <string name="_0">0</string>
-    <string name="rub">₽</string>
-    <string name="INCOMES">Расходы</string>
-    <string name="expenses">Доходы</string>
+    <string name="incomes">Доходы</string>
+    <string name="expenses">Расходы</string>
     <string name="balance">Баланс</string>
-    <string name="name_add">Название</string>
+    <string name="name_add">Наименование</string>
+    <string name="sign_in_google_t">Войти через <b>Google+</b></string>
     <string-array name="title_items">
-        <item >"Доходы"</item>
-        <item >"Расходы"</item>
-        <item >"Баланс"</item>
+        <item>"Доходы"</item>
+        <item>"Расходы"</item>
+        <item>"Баланс"</item>
     </string-array>
+    <string name="rub">%1$d \u20bd</string>
+    <string name="price">Цена</string>
+    <string name="delete">Удалить</string>
+    <string name="you_sure">Вы уверены?</string>
 
 </resources>
