@@ -92,8 +92,8 @@ class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ItemViewHolder> {
         }
 
         public void bind(final Item item, final int position, final ItemsAdapterListener listener, boolean selected) {
-            title.setText(item.name);
-            price.setText(item.price);
+            title.setText(item.getName());
+            price.setText(item.getPrice());
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onItemClick(item, position);

@@ -9,10 +9,42 @@ public class Item implements Parcelable {
     public static final String TYPE_INCOMES = "incomes";
     public static final String TYPE_EXPENSES = "expenses";
 
-    public int id;
-    public String name;
-    public String price;
-    public String type;
+    private int id;
+    private String name;
+    private String price;
+    private String type;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public Item(String name, String price, String type) {
         this.name = name;

@@ -89,7 +89,7 @@ public class AuthActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call<AuthResult> call, @NotNull Response<AuthResult> response) {
                 AuthResult result = response.body();
-                ((App) getApplication()).saveAuthToken(Objects.requireNonNull(result).token);
+                ((App) getApplication()).saveAuthToken(Objects.requireNonNull(result).getToken());
                 finish();
             }
 

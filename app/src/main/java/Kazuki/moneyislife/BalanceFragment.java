@@ -64,14 +64,14 @@ public class BalanceFragment extends Fragment {
     private void setIncome(List<Item> incomes) {
         incomeSum = 0;
         for (int i = 0; i < incomes.size(); i++) {
-            incomeSum += Integer.parseInt(incomes.get(i).price);
+            incomeSum += Integer.parseInt(incomes.get(i).getPrice());
         }
     }
 
     private void setExpenses(List<Item> incomes) {
         expensesSum = 0;
         for (int i = 0; i < incomes.size(); i++) {
-            expensesSum += Integer.parseInt(incomes.get(i).price);
+            expensesSum += Integer.parseInt(incomes.get(i).getPrice());
         }
     }
 

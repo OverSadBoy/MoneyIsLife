@@ -102,13 +102,13 @@ public class ItemsFragment extends Fragment {
     }
 
     private void addItem(final Item item) {
-        Call<AddItemResult> call = api.addItem(item.price, item.name, item.type);
+        Call<AddItemResult> call = api.addItem(item.getPrice(), item.getName(), item.getType());
         call.enqueue(new Callback<AddItemResult>() {
             @Override
             public void onResponse(@NotNull Call<AddItemResult> call, @NotNull Response<AddItemResult> response) {
                 AddItemResult result = response.body();
-                if (Objects.requireNonNull(result).status.equals("success")) {
-                    item.id = result.id;
+                if (Objects.requireNonNull(result).getStatus().equals("success")) {
+                    item.setId(result.getId());
                     adapter.addItem(item);
                 }
             }
@@ -123,7 +123,7 @@ public class ItemsFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADD_ITEM_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Item item = data.getParcelableExtra("item");
-            if (item.type.equals(type)) {
+            if (item.getType().equals(type)) {
                 addItem(item);
             }
         }
@@ -133,7 +133,7 @@ public class ItemsFragment extends Fragment {
     private void removeSelectedItems() {
         for (int i = adapter.getSelectedItems().size() - 1; i >= 0; i--) {
             Item item = adapter.remove(adapter.getSelectedItems().get(i));
-            Call<RemoveItemResult> call = api.removeItem(item.id);
+            Call<RemoveItemResult> call = api.removeItem(item.getId());
             call.enqueue(new Callback<RemoveItemResult>() {
                 @Override
                 public void onResponse(@NotNull Call<RemoveItemResult> call, @NotNull Response<RemoveItemResult> response) {
