@@ -1,6 +1,6 @@
 package Kazuki.moneyislife.api;
 
-import Kazuki.moneyislife.BuildConfig;
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.text.TextUtils;
 import android.util.Log;
@@ -8,8 +8,11 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 
+import Kazuki.moneyislife.BuildConfig;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -19,6 +22,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@SuppressLint("Registered")
 public class App extends Application {
 
     private static final String PREFS_NAME = "shared_prefs";
@@ -84,6 +88,7 @@ public class App extends Application {
 
     private class AuthInterceptor implements Interceptor {
 
+        @NotNull
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();

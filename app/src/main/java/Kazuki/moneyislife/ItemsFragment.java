@@ -1,9 +1,5 @@
 package Kazuki.moneyislife;
 
-import Kazuki.moneyislife.api.AddItemResult;
-import Kazuki.moneyislife.api.Api;
-import Kazuki.moneyislife.api.App;
-import Kazuki.moneyislife.api.RemoveItemResult;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,10 +16,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Objects;
+
+import Kazuki.moneyislife.api.AddItemResult;
+import Kazuki.moneyislife.api.Api;
+import Kazuki.moneyislife.api.App;
+import Kazuki.moneyislife.api.RemoveItemResult;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import java.util.List;
 
 public class ItemsFragment extends Fragment {
 
@@ -53,23 +58,22 @@ public class ItemsFragment extends Fragment {
         adapter = new ItemsAdapter();
         adapter.setListener(new AdapterListener());
         Bundle bundle = getArguments();
-        type = bundle.getString(TYPE_KEY, Item.TYPE_EXPENSES);
+        type = Objects.requireNonNull(bundle).getString(TYPE_KEY, Item.TYPE_EXPENSES);
         if (type.equals(Item.TYPE_UNKNOWN)) {
             throw new IllegalArgumentException("Unknown type");
         }
-        app = (App) getActivity().getApplication();
+        app = (App) Objects.requireNonNull(getActivity()).getApplication();
         api = app.getApi();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_items, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_items, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recycler = view.findViewById(R.id.list);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -85,12 +89,13 @@ public class ItemsFragment extends Fragment {
         Call<List<Item>> call = api.getItems(type);
         call.enqueue(new Callback<List<Item>>() {
             @Override
-            public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
+            public void onResponse(@NotNull Call<List<Item>> call, @NotNull Response<List<Item>> response) {
                 adapter.setData(response.body());
                 refresh.setRefreshing(false);
             }
+
             @Override
-            public void onFailure(Call<List<Item>> call, Throwable t) {
+            public void onFailure(@NotNull Call<List<Item>> call, @NotNull Throwable t) {
                 refresh.setRefreshing(false);
             }
         });
@@ -100,15 +105,16 @@ public class ItemsFragment extends Fragment {
         Call<AddItemResult> call = api.addItem(item.price, item.name, item.type);
         call.enqueue(new Callback<AddItemResult>() {
             @Override
-            public void onResponse(Call<AddItemResult> call, Response<AddItemResult> response) {
+            public void onResponse(@NotNull Call<AddItemResult> call, @NotNull Response<AddItemResult> response) {
                 AddItemResult result = response.body();
-                if (result.status.equals("success")) {
+                if (Objects.requireNonNull(result).status.equals("success")) {
                     item.id = result.id;
                     adapter.addItem(item);
                 }
             }
+
             @Override
-            public void onFailure(Call<AddItemResult> call, Throwable t) {
+            public void onFailure(@NotNull Call<AddItemResult> call, @NotNull Throwable t) {
             }
         });
     }
@@ -130,10 +136,11 @@ public class ItemsFragment extends Fragment {
             Call<RemoveItemResult> call = api.removeItem(item.id);
             call.enqueue(new Callback<RemoveItemResult>() {
                 @Override
-                public void onResponse(Call<RemoveItemResult> call, Response<RemoveItemResult> response) {
+                public void onResponse(@NotNull Call<RemoveItemResult> call, @NotNull Response<RemoveItemResult> response) {
                 }
+
                 @Override
-                public void onFailure(Call<RemoveItemResult> call, Throwable t) {
+                public void onFailure(@NotNull Call<RemoveItemResult> call, @NotNull Throwable t) {
                 }
             });
         }
@@ -154,7 +161,7 @@ public class ItemsFragment extends Fragment {
             if (isInActionMode()) {
                 return;
             }
-            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(actionModeCallback);
+            actionMode = ((AppCompatActivity) Objects.requireNonNull(getActivity())).startSupportActionMode(actionModeCallback);
             toggleSelection(position);
         }
 
@@ -182,11 +189,8 @@ public class ItemsFragment extends Fragment {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.remove:
-                    showDialog();
-                    break;
-            }
+            if (item.getItemId() == R.id.remove)
+                showDialog();
             return false;
         }
 
@@ -199,12 +203,13 @@ public class ItemsFragment extends Fragment {
 
     private void showDialog() {
         DialogFragmentConfirm dialog = new DialogFragmentConfirm();
-        dialog.show(getFragmentManager(), "ConfirmationDialog");
+        dialog.show(Objects.requireNonNull(getFragmentManager()), "ConfirmationDialog");
         dialog.setDialogListener(new DialogListener() {
             @Override
             public void positiveClick() {
                 removeSelectedItems();
             }
+
             @Override
             public void negativeClick() {
                 actionMode.finish();

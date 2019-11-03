@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,7 @@ class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ItemViewHolder> {
         notifyItemInserted(0);
     }
 
+    @NotNull
     @Override
     public ItemsAdapter.ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());

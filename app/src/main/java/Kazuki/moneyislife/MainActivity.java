@@ -1,6 +1,5 @@
 package Kazuki.moneyislife;
 
-import Kazuki.moneyislife.api.App;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+
+import Kazuki.moneyislife.api.App;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         else
             startActivity(new Intent(this, AuthActivity.class));
     }
+
     private void initTabs() {
         if (!initialized) {
             pager.setAdapter(new MainPagesAdapter(getSupportFragmentManager(), this));
@@ -64,7 +66,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     @Override
-    public void onPageScrolled(int i, float v, int i1) {}
+    public void onPageScrolled(int i, float v, int i1) {
+    }
 
     @Override
     public void onPageSelected(int i) {

@@ -1,9 +1,7 @@
 package Kazuki.moneyislife;
 
-import Kazuki.moneyislife.api.Api;
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,13 +14,15 @@ import android.widget.Button;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 
 public class AddAct extends AppCompatActivity {
 
     public static final String TYPE_KEY = "type";
 
     private TextInputEditText name;
-    private TextInputEditText  price;
+    private TextInputEditText price;
     private Button addBtn;
     private String type;
 
@@ -33,7 +33,7 @@ public class AddAct extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle(R.string.add);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -46,8 +46,8 @@ public class AddAct extends AppCompatActivity {
         addBtn = findViewById(R.id.addBtn);
         addBtn.setTextColor(getResources().getColor(R.color.white));
         addBtn.setOnClickListener((View v) -> {
-            String nameValue = name.getText().toString();
-            String priceValue = price.getText().toString();
+            String nameValue = Objects.requireNonNull(name.getText()).toString();
+            String priceValue = Objects.requireNonNull(price.getText()).toString();
             Item item = new Item(nameValue, priceValue, type);
             Intent intent = new Intent();
             intent.putExtra("item", item);
@@ -58,17 +58,20 @@ public class AddAct extends AppCompatActivity {
 
     private class TextListener implements TextWatcher {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
         @Override
         public void afterTextChanged(Editable s) {
             CharSequence nameText = name.getText();
             CharSequence priceText = price.getText();
-            if(!TextUtils.isEmpty(nameText) && !TextUtils.isEmpty(priceText)) {
+            if (!TextUtils.isEmpty(nameText) && !TextUtils.isEmpty(priceText)) {
                 addBtn.setVisibility(View.VISIBLE);
-            }
-            else {
+            } else {
                 addBtn.setVisibility(View.INVISIBLE);
             }
         }

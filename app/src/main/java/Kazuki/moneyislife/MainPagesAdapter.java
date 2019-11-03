@@ -1,7 +1,6 @@
 package Kazuki.moneyislife;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +11,7 @@ public class MainPagesAdapter extends FragmentPagerAdapter {
     public final static int PAGE_INCOMES = 0;
     public final static int PAGE_EXPENSES = 1;
     public final static int PAGE_BALANCE = 2;
-    private String [] titles;
+    private String[] titles;
 
     public MainPagesAdapter(FragmentManager fm, Context context) {
         super(fm);
