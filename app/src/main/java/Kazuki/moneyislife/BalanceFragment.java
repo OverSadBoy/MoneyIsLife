@@ -48,7 +48,7 @@ public class BalanceFragment extends Fragment {
         balance = view.findViewById(R.id.balance);
         income = view.findViewById(R.id.income);
         expenses = view.findViewById(R.id.expenses);
-        diagram = view.findViewById(R.id.diagram);
+        //diagram = view.findViewById(R.id.diagram);
         loadDate();
     }
 
@@ -106,7 +106,7 @@ public class BalanceFragment extends Fragment {
             }
         });
         balance.setText(getString(R.string.rub, incomeSum - expensesSum));
-        diagram.update(incomeSum, expensesSum);
+//        diagram.update(incomeSum, expensesSum);
 
     }
 
